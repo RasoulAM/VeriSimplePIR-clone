@@ -173,16 +173,10 @@ void benchmark_verisimplepir_online(const VeriSimplePIR& pir, const bool verbose
     std::cout << "Total time: " << total_time << " ms\n";
 }
 
+#include <cstdlib>
 int main() {
-    // const uint64_t N = 1ULL<<30;
-    // const uint64_t N = 1ULL<<33;
-    const uint64_t N = 4*(1ULL<<33);
-    // const uint64_t N = 8*(1ULL<<33);
-    // const uint64_t N = 16*(1ULL<<33);
-    // const uint64_t N = 1ULL<<35;
-    // const uint64_t d = 2048;
-    // const uint64_t d = 128;
-    const uint64_t d = 1;
+    const uint64_t N = std::getenv("ROWS_DB") ? std::stoull(std::getenv("ROWS_DB")) : 4*(1ULL<<33);
+    const uint64_t d = std::getenv("COLS_DB") ? std::stoull(std::getenv("COLS_DB")) : 1;
 
     // const bool verbose = true;
     const bool verbose = false;
@@ -190,8 +184,7 @@ int main() {
     std::cout << "Input params: N = " << N << " d = " << d << std::endl;
     std::cout << "database size: " << N*d / (8.0*(1ULL<<20)) << " MiB\n";
 
-    // const bool honest_hint = true;
-    const bool honest_hint = false;
+    const bool honest_hint = true;
     VeriSimplePIR pir(
         N, d, 
         true,   // allowTrivial
@@ -204,7 +197,7 @@ int main() {
 
     std::cout << "database params: "; pir.dbParams.print();
 
-    // benchmark_verisimplepir_offline_server_compute(pir, verbose);
-    // benchmark_verisimplepir_offline_client_compute(pir, verbose);
+    benchmark_verisimplepir_offline_server_compute(pir, verbose);
+    benchmark_verisimplepir_offline_client_compute(pir, verbose);
     benchmark_verisimplepir_online(pir, verbose);
 }

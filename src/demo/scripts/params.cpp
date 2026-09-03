@@ -1,22 +1,14 @@
 #include "pir/pir.h"
 
+#include <cstdlib>
+#include <string>
+
 int main() {
-
     std::vector<std::vector<uint64_t>> N_d_params;
-
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 35), 1});
-    // N_d_params.push_back(std::vector<uint64_t>{(1ULL << 24), 2048});
-
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 36), 1});
-    // N_d_params.push_back(std::vector<uint64_t>{(1ULL << 25), 2048});
-
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 37), 1});
-    // N_d_params.push_back(std::vector<uint64_t>{(1ULL << 26), 2048});
-
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 38), 1});
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 39), 1});
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 40), 1});
-    N_d_params.push_back(std::vector<uint64_t>{(1ULL << 41), 1});
+    
+    uint64_t rows_db = std::getenv("ROWS_DB") ? std::stoull(std::getenv("ROWS_DB")) : (1ULL << 35);
+    uint64_t cols_db = std::getenv("COLS_DB") ? std::stoull(std::getenv("COLS_DB")) : 1;
+    N_d_params.push_back(std::vector<uint64_t>{rows_db, cols_db});
 
 
     for (std::vector<uint64_t> N_d : N_d_params) {
@@ -25,11 +17,11 @@ int main() {
 
         Database db(N, d);
 
-        const bool allowTrivial = false;  // set to true to allow digests that are larger than the database
+        const bool allowTrivial = true;  // set to true to allow digests that are larger than the database
         const bool verbose      = false;  // set to true to output internals of parameter optimization script
         const bool simplePIR    = false;  // set to true to compute SimplePIR parameters. preproc cannot also be true
-        const bool preproc      = false;   // set to true to compute VeriSimplePIR parameters. Set to false to compute VLHE parameters.
-        const bool honesthint   = false;  // set to true to activate the honest hint assumption.
+        const bool preproc      = true;   // set to true to compute VeriSimplePIR parameters. Set to false to compute VLHE parameters.
+        const bool honesthint   = true;  // set to true to activate the honest hint assumption.
 
         const PlaintextDBParams dbParams = db.computeParams(allowTrivial, verbose, simplePIR, 1, preproc, honesthint);
 

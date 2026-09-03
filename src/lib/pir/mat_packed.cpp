@@ -6,7 +6,7 @@
 // #define BASIS 9
 // #define BASIS 16
 // #define BASIS 20
-#define BASIS 26
+#define BASIS 30
 #define COMPRESSION (sizeof(Elem)*8/BASIS)
 #define MASK (1ULL << BASIS) - 1
 
